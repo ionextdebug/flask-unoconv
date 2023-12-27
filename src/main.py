@@ -2,7 +2,7 @@ from flask import Flask
 from flask import render_template
 from flask import request
 import os
-
+import uuid
 
 app = Flask(__name__,
             static_url_path='/static', 
@@ -16,9 +16,10 @@ def hello_world():
 @app.route('/upload', methods = ['POST'])   
 def upload():   
     if request.method == 'POST':   
-        f = request.files['file'] 
-        f.save(f.filename)
-        os.system(f"unoconv -f pdf {f.filename}")
+        f = request.files['file']
+        uuid_filename = f"{uuid.uuid1()}_{f.filename}"
+        f.save(uuid_filename)
+        os.system(f"unoconv -f pdf {uuid_filename}")
         return "Success!"
   
 if __name__ == '__main__':   
